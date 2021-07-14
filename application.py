@@ -27,9 +27,10 @@ players = l_column.selectbox(label="Players", options=data_options["Players"].dr
 dates = m_column.date_input(label="Date")
 exercise_groups = r_column.multiselect(label="Primary Groups", options=individual_exercises, default=individual_exercises[0])
 # print(exercise_groups)
-for i in exercise_groups:
-    exercise_options_list = exercise_options[exercise_options["PrimaryGroups"].notna()]
-    exercise_options_list = exercise_options_list[exercise_options_list["PrimaryGroups"].str.contains(i)]
+if exercise_groups != None:
+    for i in exercise_groups:
+        exercise_options_list = exercise_options[exercise_options["PrimaryGroups"].notna()]
+        exercise_options_list = exercise_options_list[exercise_options_list["PrimaryGroups"].str.contains(i)]
 
 # exercise_options = []
 filtered_exercise_options = exercise_options_list["ExerciseName"].dropna()
@@ -66,3 +67,13 @@ if st.button(label="Submit"):
                    "Notes":notes})
     st.write(pd.DataFrame(get_data()))
     pd.DataFrame(get_data()).to_clipboard(index=False)
+if st.button(label="Download CSV"):
+    pd.DataFrame(get_data()).to_csv("exercises.csv", index=False)
+
+# csv = df.to_csv().encode()
+
+# b64 = base64.b64encode(csv).decode()
+
+# href = f"Download CSV File"
+
+# st.markdown(href, unsafe_allow_html=True)
