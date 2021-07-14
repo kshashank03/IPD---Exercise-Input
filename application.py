@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import data_access as da
+import base64
+import io
 
 st.set_page_config(layout="wide")
 @st.cache(allow_output_mutation=True)
@@ -53,7 +55,7 @@ time_of_day = r_column.selectbox(label="Time of Day", options=data_options["Time
 
 comments = st.subheader("After adding your exercises, they'll automatically be copied to your clipboard")
 
-if st.button(label="Submit"):
+if st.button(label="Add Row"):
     get_data().append({"Player Name":players,
                    "Date Picker":"",
                    "Block":blocks,
@@ -66,14 +68,9 @@ if st.button(label="Submit"):
                    "Strength":strength_goal,
                    "Notes":notes})
     st.write(pd.DataFrame(get_data()))
-    pd.DataFrame(get_data()).to_clipboard(index=False)
+    # pd.DataFrame(get_data()).to_clipboard(index=False) # Removed this for now, doesn't work on Streamlit Sharing
 # if st.button(label="Download CSV"):
-#     pd.DataFrame(get_data()).to_csv("exercises.csv", index=False)
-
-# csv = df.to_csv().encode()
-
-# b64 = base64.b64encode(csv).decode()
-
-# href = f"Download CSV File"
-
-# st.markdown(href, unsafe_allow_html=True)
+csv = pd.DataFrame(get_data()).to_csv(index=False)
+b64 = base64.b64encode(csv.encode()).decode()  # some strings
+linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+st.markdown(linko, unsafe_allow_html=True)
