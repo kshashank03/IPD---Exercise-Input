@@ -9,6 +9,9 @@ st.set_page_config(layout="wide")
 def get_data():
     return []
 
+# def clear_data():
+#     get_data().clear()
+
 data_options = da.data_options()
 exercise_options = da.exercise_database()
 
@@ -50,10 +53,11 @@ strength_goal = m_column.selectbox(label="Strength Goal", options=data_options["
 notes = r_column.text_area(label="Notes")
 include_type = l_column.selectbox(label="Include", options=data_options["Include"].dropna(), index=0)
 contraction_type = m_column.selectbox(label="Contraction Type", options=data_options["Contraction Type"].dropna(), index=0)
-time_of_day = r_column.selectbox(label="Time of Day", options=data_options["Time Of Day"].dropna(), index=0)
+contraction_speed = r_column.selectbox(label="Contraction Speed", options=data_options["Contraction Speed"].dropna(), index=0)
+time_of_day = l_column.selectbox(label="Time of Day", options=data_options["Time Of Day"].dropna(), index=0)
 # submit = st.button(label="Submit")
 
-comments = st.subheader("After adding your exercises, they'll automatically be copied to your clipboard")
+# comments = st.subheader("After adding your exercises, they'll automatically be copied to your clipboard")
 
 if st.button(label="Add Row"):
     get_data().append({"Player Name":players,
@@ -66,11 +70,32 @@ if st.button(label="Add Row"):
                    "Weight":weight,
                    "Tempo":tempo,
                    "Strength":strength_goal,
-                   "Notes":notes})
-    st.write(pd.DataFrame(get_data()))
+                   "Notes":notes,
+                   "Contraction Type":contraction_type,
+                   "Include":include_type,
+                   "Contraction Speed":contraction_speed,
+                   "Time":time_of_day})
+    # st.write(pd.DataFrame(get_data()))
     # pd.DataFrame(get_data()).to_clipboard(index=False) # Removed this for now, doesn't work on Streamlit Sharing
 # if st.button(label="Download CSV"):
+
+if st.button(label="Clear Table"):
+    get_data().clear()
+    # st.subheader("Are you sure?")
+    # st.write(pd.DataFrame(get_data()))
+    # if st.button(label="Yes"):
+    #     clear_data()
+        # st.write(pd.DataFrame(get_data()))
+    # if st.button(label="No"):
+    #     break
+
+if st.button(label="Clear Last Row"):
+    get_data().pop()
+    # st.write(pd.DataFrame(get_data()))
+
+st.write(pd.DataFrame(get_data()))
+
 csv = pd.DataFrame(get_data()).to_csv(index=False)
 b64 = base64.b64encode(csv.encode()).decode()  # some strings
-linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+linko= f'<a href="data:file/csv;base64,{b64}" download="exercises.csv">Download csv file</a>'
 st.markdown(linko, unsafe_allow_html=True)
