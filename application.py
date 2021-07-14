@@ -67,8 +67,8 @@ if st.button(label="Submit"):
                    "Notes":notes})
     st.write(pd.DataFrame(get_data()))
     pd.DataFrame(get_data()).to_clipboard(index=False)
-if st.button(label="Download CSV"):
-    pd.DataFrame(get_data()).to_csv("exercises.csv", index=False)
+# if st.button(label="Download CSV"):
+#     pd.DataFrame(get_data()).to_csv("exercises.csv", index=False)
 
 # csv = df.to_csv().encode()
 
